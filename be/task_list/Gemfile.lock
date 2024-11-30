@@ -109,6 +109,8 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    graphiql-rails (1.10.1)
+      railties
     graphql (2.4.4)
       base64
       fiber-storage
@@ -176,6 +178,11 @@ GEM
     parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
+    propshaft (1.1.0)
+      actionpack (>= 7.0.0)
+      activesupport (>= 7.0.0)
+      rack
+      railties (>= 7.0.0)
     psych (5.2.0)
       stringio
     puma (6.5.0)
@@ -345,8 +352,10 @@ DEPENDENCIES
   brakeman
   debug
   factory_bot_rails
+  graphiql-rails (~> 1.10)
   graphql (~> 2.4)
   kamal
+  propshaft (~> 1.1)
   puma (>= 5.0)
   rails (~> 8.0.0)
   rspec-rails
