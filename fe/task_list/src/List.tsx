@@ -2,14 +2,14 @@ import { useQuery, gql } from '@apollo/client';
 import Task from './Task.tsx'
 
 
-const GET_LIST = (listId: number) => gql`
-  { list(id: ${listId})
-    { id name tasks { id name order done } }
-  }
+const GET_LIST = gql`
+    query List($listId: ID!) { list(id: $listId)
+        { tasks { id name order done } }
+    }
 `;
 
 export default function List({ list }) {
-    const { loading, error, data } = useQuery(GET_LIST(list.id));
+    const { loading, error, data } = useQuery(GET_LIST, { variables: { listId: list.id } });
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error : {error.message}</p>;

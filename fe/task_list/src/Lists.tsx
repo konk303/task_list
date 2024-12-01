@@ -3,9 +3,7 @@ import { useQuery, gql } from '@apollo/client';
 import List from './List.tsx'
 
 const GET_LISTS = gql`
-  { lists
-    { id name }
-  }
+  query { lists { id name } }
 `;
 
 export default function Lists() {
