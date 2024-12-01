@@ -1,23 +1,41 @@
 import { useMutation, gql } from '@apollo/client';
 
-const UPDATE_TASK = gql`
-    mutation UpdateTask($id: ID!, $name: String!, $order: Int!, $done: Boolean!) { 
-        updateTask(input: { id: $id, name: $name, order: $order, done: $done })
+const UPDATE_TASK_NAME = gql`
+    mutation UpdateTask($id: ID!, $name: String!) { 
+        updateTask(input: { id: $id, name: $name })
+            { task { id listId name order done } }
+    }
+`;
+const UPDATE_TASK_DONE = gql`
+    mutation UpdateTask($id: ID!, $done: Boolean!) { 
+        updateTask(input: { id: $id, done: $done })
             { task { id listId name order done } }
     }
 `;
 
-export default function Task({ task }) {
-    const [updateTask, { data, loading, error }] = useMutation(UPDATE_TASK);
+const nameArea = (id, name) => {
+    const [updateTaskName, { _, loading, error }] = useMutation(UPDATE_TASK_NAME);
 
     if (loading) return <p>Submitting...</p>;
     if (error) return <p>Submission error! {error.message}</p>;
+    return (<input value={ name } onChange={ e => updateTaskName({ variables: { id: id, name: e.target.value } })  } />)
+}
+const doneArea = (id, done) => {
+    const [updateTaskDone, { _, loading, error }] = useMutation(UPDATE_TASK_DONE);
 
+    if (loading) return <p>Submitting...</p>;
+    if (error) return <p>Submission error! {error.message}</p>;
+    return (
+        <input type="checkbox" checked={ done } onChange={ e=> updateTaskDone({ variables: { id: id, done: e.target.checked } }) } />
+    )
+}
+
+export default function Task({ task }) {
    return (
     <div>
         (id: { task.id })
-        <input value={ task.name } onChange={ e => updateTask({ variables: { ...task, name: e.target.value } })  } />
-        <input type="checkbox" checked={ task.done } onChange={ e=> updateTask({ variables: { ...task, done: e.target.checked } }) } />
+        { nameArea(task.id, task.name) }
+        { doneArea(task.id, task.done) }
         (order: { task.order })
     </div>
     )

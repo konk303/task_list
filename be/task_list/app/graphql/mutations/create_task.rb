@@ -3,16 +3,16 @@
 module Mutations
   class CreateTask < BaseMutation
     field :task, Types::TaskType, null: false
-    field :errors, [String], null: false
+    field :errors, [ String ], null: false
 
     argument :list_id, ID, required: true
     argument :name, String, required: true
     argument :order, Integer, required: true
     argument :done, Boolean, required: true
 
-    def resolve(id:, name:, order:, done:)
-      task = List.find(list_id).tasks.build
-      if task.save(name:, order:, done:)
+    def resolve(list_id:, name:, order:, done:)
+      task = List.find(list_id).tasks.build(name:, order:, done:)
+      if task.save
         { task: task, errors: [] }
       else
         { task: nil, errors: comment.errors.full_messages }
