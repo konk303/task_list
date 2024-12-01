@@ -2,6 +2,9 @@
 
 module Types
   class MutationType < Types::BaseObject
+    field :create_task, mutation: Mutations::CreateTask
+    field :update_task, mutation: Mutations::UpdateTask
+
     # TODO: remove me
     field :test_field, String, null: false,
       description: "An example field added by the generator"
