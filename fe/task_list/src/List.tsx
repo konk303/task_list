@@ -5,20 +5,20 @@ import Task from './Task.tsx'
 
 const GET_LIST = gql`
     query List($listId: ID!) { list(id: $listId)
-        { tasks { id name order done } }
+        { tasks { id listId name order done } }
     }
 `;
 const REORDER_TASKS = gql`
    mutation ReorderTasks($listId: ID!, $taskIds: [ID!]!) { 
         reorderTasks(input: { listId: $listId, taskIds: $taskIds })
-            { tasks { id name order done } }
+            { tasks { id listId name order done } }
     }
 `;
 
 export default function List({ list }) {
     const prevListId = useRef(list.id)
     const prevTaskIds = useRef([])
-    const { loading, error, data } = useQuery(GET_LIST, { variables: { listId: list.id } });
+    const { loading, error, data, refetch } = useQuery(GET_LIST, { variables: { listId: list.id } });
     const [reorderTasks] = useMutation(REORDER_TASKS);
 
     if (loading) return <p>Loading...</p>;
@@ -35,7 +35,8 @@ export default function List({ list }) {
 
     return (
         <div>
-            {tasks.map(task => <Task key={task.id} task={task} />)}
+            {tasks.toSpliced(tasks.findIndex(task => task.done), 0, { listId: list.id })
+                .map(task => <Task key={ task.id || null } task={task} refetch={refetch} />)}
         </div>
     )
 }

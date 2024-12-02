@@ -1,42 +1,35 @@
 import { useMutation, gql } from '@apollo/client';
+import { useCallback } from 'react';
 
-const UPDATE_TASK_NAME = gql`
-    mutation UpdateTask($id: ID!, $name: String!) { 
-        updateTask(input: { id: $id, name: $name })
+const UPSERT_TASK = gql`
+    mutation UpsertTask($id: ID = null, $listId: ID!, $name: String, $done: Boolean = false) { 
+        upsertTask(input: { id: $id, listId: $listId, name: $name done: $done })
             { task { id listId name order done } }
     }
 `;
-const UPDATE_TASK_DONE = gql`
-    mutation UpdateTask($id: ID!, $done: Boolean!) { 
-        updateTask(input: { id: $id, done: $done })
-            { task { id listId name order done } }
+const DELETE_TASK = gql`
+    mutation DeleteTask($id: ID!) { 
+        deleteTask(input: { id: $id }) { task { id } }
     }
 `;
 
-const nameArea = (id, name) => {
-    const [updateTaskName, { _, loading, error }] = useMutation(UPDATE_TASK_NAME);
+export default function Task({ task, refetch }) {
+    const [upsertTask] = useMutation(UPSERT_TASK);
+    const [deleteTask] = useMutation(DELETE_TASK);
 
-    // if (loading) return <p>Submitting...</p>;
-    // if (error) return <p>Submission error! {error.message}</p>;
-    return (<input value={ name } onChange={ e => updateTaskName({ variables: { id: id, name: e.target.value } })  } />)
-}
-const doneArea = (id, done) => {
-    const [updateTaskDone, { _, loading, error }] = useMutation(UPDATE_TASK_DONE);
+    const upsertHandler = useCallback(task => {
+        upsertTask({ variables: task }).then(() => { if (!task.id) refetch() })
+    }, [])
+    const deleteHandler = useCallback(() => {
+        deleteTask({ variables: { id: task.id } }).then(refetch)
+    }, [])
 
-    // if (loading) return <p>Submitting...</p>;
-    // if (error) return <p>Submission error! {error.message}</p>;
     return (
-        <input type="checkbox" checked={ done } onChange=
-            { e => updateTaskDone({ variables: { id: id, done: e.target.checked } }) } />
-    )
-}
-
-export default function Task({ task, handleReorder }) {
-   return (
     <div>
         (id: { task.id })
-        { nameArea(task.id, task.name) }
-        { doneArea(task.id, task.done, handleReorder) }
+        <input value={ task.name } onChange={ e => upsertHandler({ ...task, name: e.target.value }) } />
+        <input type="checkbox" checked={ task.done } onChange={ e => upsertHandler({ ...task, done: e.target.checked }) } />
+        <button type="button" onClick={ deleteHandler }>削除</button>
         (order: { task.order })
     </div>
     )
