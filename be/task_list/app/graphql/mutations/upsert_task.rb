@@ -11,10 +11,10 @@ module Mutations
     argument :done, Boolean, required: false
 
     def resolve(id:, list_id:, name: nil, done: nil)
-      task = if id.present?
-               List.find(list_id).tasks.find(id)
+      task = if id == 'newRecord'
+               List.find(list_id).tasks.new(order: 10_000, done: false)
              else
-               List.find(list_id).tasks.new(order: 10_000)
+               List.find(list_id).tasks.find(id)
              end
       task.name = name.presence || task.name
       task.done = done unless done.nil?
