@@ -28,8 +28,13 @@ export default function Task({ task, refetch }) {
     <div>
         (id: { task.id })
         <input value={ task.name } onChange={ e => upsertHandler({ ...task, name: e.target.value }) } />
-        <input type="checkbox" checked={ task.done } onChange={ e => upsertHandler({ ...task, done: e.target.checked }) } />
-        <button type="button" onClick={ deleteHandler }>削除</button>
+        <input
+         type="checkbox"
+         checked={ task.done }
+         disabled={ task.id === null }
+         onChange={ e => upsertHandler({ ...task, done: e.target.checked }) }
+         />
+        <button type="button" onClick={ deleteHandler } disabled={ task.id === null }>削除</button>
         (order: { task.order })
     </div>
     )

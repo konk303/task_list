@@ -35,8 +35,8 @@ export default function List({ list }) {
 
     return (
         <div>
-            {tasks.toSpliced(tasks.findIndex(task => task.done), 0, { listId: list.id })
-                .map(task => <Task key={ task.id || null } task={task} refetch={refetch} />)}
+            {tasks.toSpliced(tasks.findIndex(task => task.done), 0, { listId: list.id, id: null })
+                .map(task => <Task key={ task.id } task={task} refetch={refetch} />)}
         </div>
     )
 }
