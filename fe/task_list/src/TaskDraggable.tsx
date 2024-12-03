@@ -29,7 +29,9 @@ export default function TaskDraggable({ id, children }: { id: Scalars['ID']['out
                 }}
                 {...attributes}
                 {...listeners}
-            >drag</i>
+            >
+                <span className={"material-icons"}>reorder</span>
+            </i>
             {children}
         </div>
     );

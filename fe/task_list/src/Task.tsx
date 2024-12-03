@@ -3,6 +3,7 @@ import { useCallback, useContext, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import TaskDraggable from './TaskDraggable';
 import { refetchListContext } from './List'
+import ReorderIcon from '@mui/icons-material/Reorder';
 import type { Task } from './__generated__/graphql';
 
 const UPSERT_TASK = gql`
@@ -31,8 +32,8 @@ export default function Task({ task }: { task: Task }) {
     const debouncedUpsert = useDebouncedCallback(upsertHandler, 1000)
 
     return (
+        
         <li><TaskDraggable id={task.id}>
-            (id: {task.id})
             <input
                 value={nameInput}
                 disabled={Boolean(task.done)}
@@ -48,8 +49,10 @@ export default function Task({ task }: { task: Task }) {
                 onChange={e => {
                     upsertHandler({ ...task, done: e.target.checked })
                 }} />
-            <button type="button" onClick={deleteHandler} disabled={task.id === null}>削除</button>
-            (order: {task.order})
+            <button type="button" onClick={deleteHandler} disabled={task.id === null}>
+                <span className={"material-icons"}>delete</span>
+            </button>
+            <span className={"info"}>(id: {task.id}, order: {task.order})</span>
         </TaskDraggable></li>
     )
 }

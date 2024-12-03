@@ -35,6 +35,36 @@ h1 {
   line-height: 1.1;
 }
 
+select {
+  font-size: 2em;
+  padding: 5px;
+}
+ul {
+  padding-left: 0;
+  list-style: none;
+}
+li {
+  padding: 10px;
+  border: 1px dotted #333333;
+  font-size: 1.5em;
+}
+input {
+  font-size: 1.5em;
+}
+input[type='checkbox'] {
+  -webkit-appearance:none;
+  width:30px;
+  height:30px;
+  background:white;
+  border-radius:5px;
+  border:2px solid #555;
+}
+input[type='checkbox']:checked {
+  background: #abd;
+}span.info {
+  color: #333333;
+  font-size: 0.5em;
+}
 button {
   border-radius: 8px;
   border: 1px solid transparent;

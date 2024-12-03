@@ -4,7 +4,7 @@ import './App.css'
 export default function App() {
   return (
     <div>
-      <h2>Simple taks list</h2>
+      <h1>Simple taks list</h1>
       <Lists />
     </div>
   );
