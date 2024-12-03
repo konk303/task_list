@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_30_005135) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_03_073416) do
   create_table "lists", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -24,6 +24,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_30_005135) do
     t.boolean "done"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["list_id", "order"], name: "index_tasks_on_list_id_and_order"
     t.index ["list_id"], name: "index_tasks_on_list_id"
   end
 
