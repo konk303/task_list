@@ -22,7 +22,7 @@ module Mutations
       if task.save
         { task: task, errors: [] }
       else
-        { task: nil, errors: comment.errors.full_messages }
+        { task: nil, errors: task.errors.full_messages }
       end
     end
   end

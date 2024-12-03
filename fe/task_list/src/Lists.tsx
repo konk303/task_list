@@ -18,7 +18,7 @@ export default function Lists() {
   const options = lists.map(({ id, name }, i: number) => (<option key={i} value={i}>{name}({id})</option>))
   return (
     <div>
-      <select value={listIndex} onChange={e => setListIndex(+ e.target.value)}>{options}</select>
+      <select value={listIndex} onChange={e => setListIndex(Number(e.target.value))}>{options}</select>
       <List list={data.lists[listIndex]}></List>
     </div>
   );

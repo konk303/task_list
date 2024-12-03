@@ -15,18 +15,9 @@ const REORDER_TASKS = gql`
 
 export default function Tasks({ listId, tasks }: { listId: Scalars['ID']['output'], tasks: TaskType[] }) {
     const [reorderTasks] = useMutation(REORDER_TASKS);
-    const [taskIds, setTaskIds] = useState(tasks.map(task => task.id))
-    const setTaskIdsAndReorderTasks = (newTaskIds: Scalars['ID']['output'][]) => {
-        setTaskIds(newTaskIds)
-        reorderTasks({ variables: { listId, taskIds: newTaskIds } })
-    }
-    useEffect(() => {
-        const newTaskIds = taskIds
-            .toSorted((a, b) => Number(tasks.find(task => task.id === a)?.done) - Number(tasks.find(task => task.id === b)?.done))
-        console.log('effect', taskIds, newTaskIds)
-        setTaskIdsAndReorderTasks(newTaskIds)
-    }, [tasks])
-    const dragEndHandler = (event) => {
+    const taskIds = tasks.map(task => task.id)
+
+    const dragEndHandler = (event: any) => {
         const { active, over } = event
 
         if (active.id === over.id) return
@@ -34,13 +25,12 @@ export default function Tasks({ listId, tasks }: { listId: Scalars['ID']['output
         const newIndex = taskIds.indexOf(over.id)
         const newTaskIds = arrayMove(taskIds, oldIndex, newIndex)
         console.log('drag', taskIds, newTaskIds)
-        setTaskIdsAndReorderTasks(newTaskIds)
+        reorderTasks({ variables: { listId, taskIds: newTaskIds } })
     }
 
-    const sortedTasks = tasks.toSorted((a, b) => taskIds.indexOf(a.id) - taskIds.indexOf(b.id))
-    const sortableTaskIds = sortedTasks.filter(task => !Boolean(task.done)).map(task => task.id)
-    const newTask: TaskType = { listId: Number(listId), id: "newRecord", name: '', done: false }
-    const sortedTaskswithNewTask = sortedTasks.toSpliced(sortedTasks.findIndex(task => Boolean(task.done)), 0, newTask)
+    const sortableTaskIds = tasks.filter(task => !Boolean(task.done)).map(task => task.id)
+    const newTask: TaskType = { listId: Number(listId), id: "newRecord", name: '', done: false, createdAt: null, updatedAt: null }
+    const sortedTaskswithNewTask = tasks.toSpliced(tasks.findIndex(task => Boolean(task.done)), 0, newTask)
     return (
         <ul><TaskSortable items={sortableTaskIds} handleDragEnd={dragEndHandler}>
             {sortedTaskswithNewTask.map(task => <Task key={task.id} task={task} />)}

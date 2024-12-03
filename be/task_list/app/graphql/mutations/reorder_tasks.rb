@@ -9,8 +9,10 @@ module Mutations
     argument :task_ids, [ ID ], required: true
 
     def resolve(list_id:, task_ids:)
-      tasks = List.find(list_id).tasks.sort_by { |task| task_ids.index(task.id.to_s) }
-      tasks.map.with_index { |task, i| task.update!(order: i.succ) }
+      tasks = List.find(list_id).tasks
+      task_ids.map.with_index do |task_id, i|
+        tasks.find { |task| task_id == task.id.to_s }.update!(order: i.succ)
+      end
       { tasks: tasks, errors: [] }
     end
   end

@@ -3,7 +3,6 @@ import { useCallback, useContext, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import TaskDraggable from './TaskDraggable';
 import { refetchListContext } from './List'
-import ReorderIcon from '@mui/icons-material/Reorder';
 import type { Task } from './__generated__/graphql';
 
 const UPSERT_TASK = gql`
@@ -41,6 +40,7 @@ export default function Task({ task }: { task: Task }) {
                     setNameInput(e.target.value)
                     debouncedUpsert({ ...task, name: e.target.value })
                 }}
+                className={ task.done ? "done" : "" }
             />
             <input
                 type="checkbox"
