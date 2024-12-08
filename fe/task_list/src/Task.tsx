@@ -1,8 +1,7 @@
 import { useMutation, gql } from '@apollo/client';
-import { useCallback, useContext, useState } from 'react';
+import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import TaskDraggable from './TaskDraggable';
-import { refetchListContext } from './List'
 import type { Task } from './__generated__/graphql';
 
 const UPSERT_TASK = gql`
@@ -17,39 +16,51 @@ const DELETE_TASK = gql`
     }
 `;
 
-export default function Task({ task }: { task: Task }) {
+export default function Task({ task, addToTasks, deleteFromTasks, recalcOrders }:
+    { task: Task, addToTasks: any, deleteFromTasks: any, recalcOrders: any }) {
     const [upsertTask] = useMutation(UPSERT_TASK);
     const [deleteTask] = useMutation(DELETE_TASK);
     const [nameInput, setNameInput] = useState(String(task.name))
-    const refetch = useContext(refetchListContext)
 
-    const deleteHandler = useCallback(() => {
-        deleteTask({ variables: { id: task.id } }).then(refetch)
-    }, [])
-    const upsertHandler = (task: Task) => (upsertTask({ variables: task }))
-        .then(() => { if (task.id === "newRecord") refetch() })
-    const debouncedUpsert = useDebouncedCallback(upsertHandler, 1000)
+    const deleteHandler = () => {
+        deleteTask({ variables: { id: task.id } })
+        deleteFromTasks(task.id)
+    }
+    const upsertDoneHandler = (done: Task["done"]) => {
+        upsertTask({ variables: { ...task, done } })
+        recalcOrders(task.id, done)
+    }
+    const upsertNameHandler = (name: Task["name"]) => {
+        upsertTask({ variables: { ...task, name } })
+            .then((result) => {
+                if (task.id === "newRecord") {
+                    setNameInput('')
+                    addToTasks(result.data.upsertTask.task.id)
+                }
+
+            })
+    }
+    const debouncedUpsert = useDebouncedCallback(upsertNameHandler, 1000)
 
     return (
-        
+
         <li><TaskDraggable id={task.id}>
             <input
                 value={nameInput}
                 disabled={Boolean(task.done)}
                 onChange={e => {
                     setNameInput(e.target.value)
-                    debouncedUpsert({ ...task, name: e.target.value })
+                    debouncedUpsert(e.target.value)
                 }}
-                className={ task.done ? "done" : "" }
+                className={task.done ? "done" : ""}
             />
             <input
                 type="checkbox"
                 checked={Boolean(task.done)}
-                disabled={task.id === null}
-                onChange={e => {
-                    upsertHandler({ ...task, done: e.target.checked })
-                }} />
-            <button type="button" onClick={deleteHandler} disabled={task.id === null}>
+                disabled={task.id === "newRecord"}
+                onChange={e => upsertDoneHandler(e.target.checked)}
+            />
+            <button type="button" onClick={deleteHandler} disabled={task.id === 'newRecord'}>
                 <span className={"material-icons"}>delete</span>
             </button>
             <span className={"info"}>(id: {task.id}, order: {task.order})</span>

@@ -3,10 +3,10 @@ import { SortableContext } from '@dnd-kit/sortable';
 import { ReactNode } from 'react';
 import type { Scalars } from './__generated__/graphql.ts';
 
-export default function TaskSortable({ children, items, handleDragEnd }:
-    { children: ReactNode, items: Scalars['ID']['output'][], handleDragEnd: (event: any) => void }) {
+export default function TaskSortable({ children, items, dragEndHandler }:
+    { children: ReactNode, items: Scalars['ID']['output'][], dragEndHandler: (event: any) => void }) {
     return (
-        <DndContext onDragEnd={handleDragEnd}>
+        <DndContext onDragEnd={dragEndHandler}>
             <SortableContext items={items}>
                 {children}
             </SortableContext>
