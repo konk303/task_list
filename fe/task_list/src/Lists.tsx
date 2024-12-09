@@ -15,7 +15,7 @@ export default function Lists() {
   if (error) return <p>Error : {error.message}</p>;
 
   const lists: [ListType] = data.lists
-  const options = lists.map(({ id, name }, i: number) => (<option key={i} value={i}>{name}({id})</option>))
+  const options = lists.map(({ id, name }, i: number) => (<option key={i} value={i}>{name}</option>))
   return (
     <div>
       <select value={listIndex} onChange={e => setListIndex(+ e.target.value)}>{options}</select>

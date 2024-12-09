@@ -49,11 +49,12 @@ ul {
 li {
   padding: 10px;
   border: 1px dotted #333333;
-  font-size: 1.5em;
+  font-size: 1em;
 }
 
 input {
   font-size: 1.5em;
+  vertical-align: middle;
 }
 
 input.done {
@@ -73,6 +74,9 @@ input[type='checkbox']:checked {
   background: #abd;
 }
 
+i {
+  vertical-align: middle;
+}
 span.info {
   /* display: block; */
   color: #333333;
@@ -89,7 +93,8 @@ button {
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
-}
+  vertical-align: middle;
+}}
 
 button:hover {
   border-color: #646cff;
