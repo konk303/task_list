@@ -5,7 +5,7 @@ module Mutations
     field :list , Types::ListType, null: false
     field :errors, [ String ], null: false
 
-    argument :id, ID, required: :true
+    argument :id, ID, required: :nullable
     argument :name, String, required: false
 
     def resolve(id:, name: nil)
