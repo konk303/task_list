@@ -5,14 +5,15 @@ module Mutations
     field :task, Types::TaskType, null: false
     field :errors, [ String ], null: false
 
+    argument :list_id, ID, required: true
     argument :id, ID, required: true
 
-    def resolve(id:)
-      task = Task.find(id)
+    def resolve(id:, list_id:)
+      task = List.find(list_id).tasks.find(id)
       if task.destroy
         { task: task, errors: [] }
       else
-        { task: nil, errors: comment.errors.full_messages }
+        { task: nil, errors: task.errors.full_messages }
       end
     end
   end

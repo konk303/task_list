@@ -2,6 +2,8 @@
 
 module Types
   class MutationType < Types::BaseObject
+    field :delete_list, mutation: Mutations::DeleteList
+    field :upsert_list, mutation: Mutations::UpsertList
     field :upsert_task, mutation: Mutations::UpsertTask
     field :reorder_tasks, mutation: Mutations::ReorderTasks
     field :delete_task, mutation: Mutations::DeleteTask
