@@ -10,8 +10,8 @@ RSpec.describe Mutations::ReorderTasks do
          run_graphql_field("Mutation.reorderTasks", nil, arguments: { input: { list_id: list.id, task_ids: task_ids }}) 
     end
     it 'reorders tasks' do 
-        expect { subject } .to change { list.reload.tasks.map(&:id) }
-            .from([task1.id, task2.id, task3.id])
-            .to([task3.id, task1.id, task2.id])
+        expect { subject } .to change { list.reload.tasks }
+            .from([task1, task2, task3])
+            .to([task3, task1, task2])
     end
 end
