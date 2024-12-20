@@ -11,19 +11,19 @@ const UPSERT_TASK = gql`
     }
 `;
 const DELETE_TASK = gql`
-    mutation DeleteTask($id: ID!) { 
-        deleteTask(input: { id: $id }) { task { id } }
+    mutation DeleteTask($id: ID!, $listId: ID!) { 
+        deleteTask(input: { id: $id, listId: $listId }) { task { id } }
     }
 `;
 
-export default function Task({ task, addToTasks, deleteFromTasks, recalcOrders }:
+export default function Task ({ task, addToTasks, deleteFromTasks, recalcOrders }:
     { task: Task, addToTasks: any, deleteFromTasks: any, recalcOrders: any }) {
     const [upsertTask] = useMutation(UPSERT_TASK);
     const [deleteTask] = useMutation(DELETE_TASK);
     const [nameInput, setNameInput] = useState(String(task.name))
 
     const deleteHandler = () => {
-        deleteTask({ variables: { id: task.id } })
+        deleteTask({ variables: { id: task.id, listId: String(task.listId) } })
         deleteFromTasks(task.id)
     }
     const upsertDoneHandler = (done: Task["done"]) => {
@@ -44,26 +44,26 @@ export default function Task({ task, addToTasks, deleteFromTasks, recalcOrders }
 
     return (
 
-        <li><TaskDraggable id={task.id}>
+        <li><TaskDraggable id={ task.id }>
             <input
-                value={nameInput}
-                disabled={Boolean(task.done)}
-                onChange={e => {
+                value={ nameInput }
+                disabled={ Boolean(task.done) }
+                onChange={ e => {
                     setNameInput(e.target.value)
                     debouncedUpsert(e.target.value)
-                }}
-                className={task.done ? "done" : ""}
+                } }
+                className={ task.done ? "done" : "" }
             />
             <input
                 type="checkbox"
-                checked={Boolean(task.done)}
-                disabled={task.id === "newRecord"}
-                onChange={e => upsertDoneHandler(e.target.checked)}
+                checked={ Boolean(task.done) }
+                disabled={ task.id === "newRecord" }
+                onChange={ e => upsertDoneHandler(e.target.checked) }
             />
-            <button type="button" onClick={deleteHandler} disabled={task.id === 'newRecord'}>
-                <span className={"material-icons"}>delete</span>
+            <button type="button" onClick={ deleteHandler } disabled={ task.id === 'newRecord' }>
+                <span className={ "material-icons" }>delete</span>
             </button>
-            <span className={"info"}>(id: {task.id}, order: {task.order})</span>
+            <span className={ "info" }>(id: { task.id }, order: { task.order })</span>
         </TaskDraggable></li>
     )
 }
