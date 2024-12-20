@@ -16,8 +16,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n    query List($listId: ID!) { list(id: $listId)\n        { tasks { id listId name order done } }\n    }\n": types.ListDocument,
     "\n    mutation UpsertTask($id: ID = null, $listId: ID!, $name: String, $done: Boolean = false) { \n        upsertTask(input: { id: $id, listId: $listId, name: $name done: $done })\n            { task { id listId name order done } }\n    }\n": types.UpsertTaskDocument,
-    "\n    mutation DeleteTask($id: ID!) { \n        deleteTask(input: { id: $id }) { task { id } }\n    }\n": types.DeleteTaskDocument,
-    "\n   mutation ReorderTasks($listId: ID!, $taskIds: [ID!]!) { \n        reorderTasks(input: { listId: $listId, taskIds: $taskIds })\n            { tasks { id listId name order done } }\n    }\n": types.ReorderTasksDocument,
+    "\n    mutation DeleteTask($id: ID!, $listId: ID!) { \n        deleteTask(input: { id: $id, listId: $listId }) { task { id } }\n    }\n": types.DeleteTaskDocument,
+    "\n   mutation ReorderTasks($listId: ID!, $taskIds: [ID!]!) { \n        reorderTasks(input: { listId: $listId, taskIds: $taskIds })\n            { tasks { listId id } }\n    }\n": types.ReorderTasksDocument,
 };
 
 /**
@@ -45,11 +45,11 @@ export function gql(source: "\n    mutation UpsertTask($id: ID = null, $listId: 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    mutation DeleteTask($id: ID!) { \n        deleteTask(input: { id: $id }) { task { id } }\n    }\n"): (typeof documents)["\n    mutation DeleteTask($id: ID!) { \n        deleteTask(input: { id: $id }) { task { id } }\n    }\n"];
+export function gql(source: "\n    mutation DeleteTask($id: ID!, $listId: ID!) { \n        deleteTask(input: { id: $id, listId: $listId }) { task { id } }\n    }\n"): (typeof documents)["\n    mutation DeleteTask($id: ID!, $listId: ID!) { \n        deleteTask(input: { id: $id, listId: $listId }) { task { id } }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n   mutation ReorderTasks($listId: ID!, $taskIds: [ID!]!) { \n        reorderTasks(input: { listId: $listId, taskIds: $taskIds })\n            { tasks { id listId name order done } }\n    }\n"): (typeof documents)["\n   mutation ReorderTasks($listId: ID!, $taskIds: [ID!]!) { \n        reorderTasks(input: { listId: $listId, taskIds: $taskIds })\n            { tasks { id listId name order done } }\n    }\n"];
+export function gql(source: "\n   mutation ReorderTasks($listId: ID!, $taskIds: [ID!]!) { \n        reorderTasks(input: { listId: $listId, taskIds: $taskIds })\n            { tasks { listId id } }\n    }\n"): (typeof documents)["\n   mutation ReorderTasks($listId: ID!, $taskIds: [ID!]!) { \n        reorderTasks(input: { listId: $listId, taskIds: $taskIds })\n            { tasks { listId id } }\n    }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
