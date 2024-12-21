@@ -9,7 +9,7 @@ module Mutations
     argument :name, String, required: false
 
     def resolve(id:, name: nil)
-      list = if id == 'newRecord'
+      list = if id == ''
                List.new
              else
                List.find(id)

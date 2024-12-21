@@ -2,18 +2,18 @@
 
 module Mutations
   class ReorderTasks < BaseMutation
-    field :tasks, [ Types::TaskType ], null: false
+    field :list, Types::ListType, null: false
     field :errors, [ String ], null: false
 
     argument :list_id, ID, required: true
     argument :task_ids, [ ID ], required: true
 
     def resolve(list_id:, task_ids:)
-      tasks = List.find(list_id).tasks
+      list = List.find(list_id)
       task_ids.map.with_index do |task_id, i|
-        tasks.find { |task| task_id == task.id.to_s }&.update!(order: i.succ)
+        list.tasks.find { |task| task_id == task.id.to_s }&.update!(order: i)
       end
-      { tasks: tasks, errors: [] }
+      { list: list, errors: [] }
     end
   end
 end

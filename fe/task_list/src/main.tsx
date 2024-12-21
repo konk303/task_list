@@ -11,7 +11,7 @@ const client = new ApolloClient({
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ApolloProvider client ={ client }>
+    <ApolloProvider client={ client }>
       <App />
     </ApolloProvider>
   </StrictMode>,

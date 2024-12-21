@@ -11,7 +11,7 @@ module Mutations
     argument :done, Boolean, required: false
 
     def resolve(id:, list_id:, name: nil, done: nil)
-      task = if id == 'newRecord'
+      task = if id == ''
                List.find(list_id).tasks.new(order: 10_000, done: false)
              else
                List.find(list_id).tasks.find(id)

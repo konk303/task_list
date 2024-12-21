@@ -1,25 +1,22 @@
-import { useState } from 'react';
-import { useQuery, gql } from '@apollo/client';
-import List from './List';
-import { List as ListType } from '../__generated__/graphql';
+import { ChangeEvent } from 'react';
+import { List } from '../__generated__/graphql';
+import TasksContainer from './TasksContainer';
 
-const GET_LISTS = gql`
-  query { lists { id name } }
-`;
-
-export default function Lists () {
-  const { loading, error, data } = useQuery(GET_LISTS);
-  const [listIndex, setListIndex] = useState(0)
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error : { error.message }</p>;
-
-  const lists: [ListType] = data.lists
-  const options = lists.map(({ id, name }, i: number) => (<option key={ i } value={ id }>{ name }</option>))
+export default function Lists ({
+  lists,
+  list,
+  changeHandler
+}: {
+  lists: List[],
+  list: List,
+  changeHandler: (event: ChangeEvent<HTMLSelectElement>) => void
+}) {
   return (
     <div>
-      <select value={ listIndex } onChange={ e => setListIndex(+ e.target.value) }>{ options }</select>
-      <List list={ data.lists[listIndex] }></List>
+      <select value={ list.id } onChange={ changeHandler }>
+        { lists.map(({ id, name }) => <option key={ id } value={ id }>{ name }</option>) }
+      </select>
+      <TasksContainer list={ list } key={ list.id } />
     </div>
   );
 }

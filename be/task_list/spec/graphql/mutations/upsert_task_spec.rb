@@ -19,7 +19,7 @@ RSpec.describe Mutations::UpsertTask do
   end
   context "when new record" do
     subject do
-      run_graphql_field("Mutation.upsertTask", nil, arguments: { input: { id: "newRecord", list_id: list.id, name: 'foo', done: true } }) 
+      run_graphql_field("Mutation.upsertTask", nil, arguments: { input: { id: "", list_id: list.id, name: 'foo', done: true } }) 
     end
     it "returns a new task" do
       expect(subject[:task].id).to eq(list.reload.tasks.last.id)

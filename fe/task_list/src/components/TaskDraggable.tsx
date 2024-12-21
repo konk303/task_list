@@ -1,9 +1,9 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ReactNode } from 'react';
-import { Scalars } from './__generated__/graphql';
+import { Task } from '../__generated__/graphql';
 
-export default function TaskDraggable({ id, children }: { id: Scalars['ID']['output'], children: ReactNode }) {
+export default function TaskDraggable ({ id, children }: { id: Task["id"], children: ReactNode }) {
     const {
         isDragging,
         attributes,
@@ -20,19 +20,19 @@ export default function TaskDraggable({ id, children }: { id: Scalars['ID']['out
     };
 
     return (
-        <div ref={setNodeRef} style={style}>
+        <div ref={ setNodeRef } style={ style }>
             <i
-                ref={setActivatorNodeRef}
+                ref={ setActivatorNodeRef }
                 className="mdi mdi-drag"
-                style={{
+                style={ {
                     cursor: isDragging ? "grabbing" : "grab"
-                }}
-                {...attributes}
-                {...listeners}
+                } }
+                { ...attributes }
+                { ...listeners }
             >
-                <span className={"material-icons"}>reorder</span>
+                <span className={ "material-icons" }>reorder</span>
             </i>
-            {children}
+            { children }
         </div>
     );
 }

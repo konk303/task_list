@@ -15,7 +15,7 @@ RSpec.describe Mutations::UpsertList do
   end
   context "when new record" do
     subject do
-      run_graphql_field("Mutation.upsertList", nil, arguments: { input: { id: "newRecord", name: 'foo' } })
+      run_graphql_field("Mutation.upsertList", nil, arguments: { input: { id: "", name: 'foo' } })
     end
     it "returns a new list" do
       expect(subject[:list].name).to eq("foo")

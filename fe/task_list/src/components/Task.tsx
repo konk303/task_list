@@ -1,69 +1,44 @@
-import { useMutation, gql } from '@apollo/client';
-import { useState } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
-import TaskDraggable from './TaskDraggable';
-import type { Task } from './__generated__/graphql';
+import type { Task as TaskType } from '../__generated__/graphql';
+import { ChangeEvent } from 'react';
 
-const UPSERT_TASK = gql`
-    mutation UpsertTask($id: ID = null, $listId: ID!, $name: String, $done: Boolean = false) { 
-        upsertTask(input: { id: $id, listId: $listId, name: $name done: $done })
-            { task { id listId name order done } }
-    }
-`;
-const DELETE_TASK = gql`
-    mutation DeleteTask($id: ID!, $listId: ID!) { 
-        deleteTask(input: { id: $id, listId: $listId }) { task { id } }
-    }
-`;
-
-export default function Task ({ task, addToTasks, deleteFromTasks, recalcOrders }:
-    { task: Task, addToTasks: any, deleteFromTasks: any, recalcOrders: any }) {
-    const [upsertTask] = useMutation(UPSERT_TASK);
-    const [deleteTask] = useMutation(DELETE_TASK);
-    const [nameInput, setNameInput] = useState(String(task.name))
-
-    const deleteHandler = () => {
-        deleteTask({ variables: { id: task.id, listId: String(task.listId) } })
-        deleteFromTasks(task.id)
-    }
-    const upsertDoneHandler = (done: Task["done"]) => {
-        upsertTask({ variables: { ...task, done } })
-        recalcOrders(task.id, done)
-    }
-    const upsertNameHandler = (name: Task["name"]) => {
-        upsertTask({ variables: { ...task, name } })
-            .then((result) => {
-                if (task.id === "newRecord") {
-                    setNameInput('')
-                    addToTasks(result.data.upsertTask.task.id)
-                }
-
-            })
-    }
-    const debouncedUpsert = useDebouncedCallback(upsertNameHandler, 1000)
+export default function Task ({
+    task,
+    name,
+    changeNameHandler,
+    changeDoneHandler,
+    deleteHandler
+}: {
+    task: TaskType,
+    name: string,
+    changeNameHandler: (event: ChangeEvent<HTMLInputElement>) => void,
+    changeDoneHandler: (event: ChangeEvent<HTMLInputElement>) => void,
+    deleteHandler: () => void
+}) {
 
     return (
 
-        <li><TaskDraggable id={ task.id }>
+        <li>
             <input
-                value={ nameInput }
+                value={ name }
                 disabled={ Boolean(task.done) }
-                onChange={ e => {
-                    setNameInput(e.target.value)
-                    debouncedUpsert(e.target.value)
-                } }
+                onChange={ changeNameHandler }
+                placeholder='新規登録'
                 className={ task.done ? "done" : "" }
             />
             <input
                 type="checkbox"
                 checked={ Boolean(task.done) }
-                disabled={ task.id === "newRecord" }
-                onChange={ e => upsertDoneHandler(e.target.checked) }
+                disabled={ task.id === "" }
+                onChange={ changeDoneHandler }
             />
-            <button type="button" onClick={ deleteHandler } disabled={ task.id === 'newRecord' }>
+            <button
+                type="button"
+                onClick={ deleteHandler }
+                disabled={ task.id === "" }
+            >
                 <span className={ "material-icons" }>delete</span>
             </button>
             <span className={ "info" }>(id: { task.id }, order: { task.order })</span>
-        </TaskDraggable></li>
+        </li >
     )
 }
