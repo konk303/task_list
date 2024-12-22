@@ -1,11 +1,10 @@
-import { ChangeEvent, useContext, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import type { List, Task as TaskType } from '../__generated__/graphql';
 import useUpsertTask from '../hooks/useUpsertTask';
 import useDeleteTask from '../hooks/useDeleteTask';
 import Task from './Task';
 import TaskDraggable from './TaskDraggable';
-import { SetNeedsReorderTasksContext } from './ListContainer';
 
 export default function TaskContainer ({
     list,
@@ -26,7 +25,6 @@ export default function TaskContainer ({
                     }
                 }
             })
-            SetNeedsReorderTasks()
         }
     })
     const [mutateDeleteTask] = useDeleteTask({
@@ -41,16 +39,10 @@ export default function TaskContainer ({
             })
         }
     })
-    const [name, setName] = useState(task.name || "")
-    const SetNeedsReorderTasks = useContext(SetNeedsReorderTasksContext)
 
-    const deleteHandler = () => {
-        mutateDeleteTask({ variables: { id: task.id, listId: list.id } })
-        SetNeedsReorderTasks()
-    }
-    const upsertName = (name: TaskType["name"]) => {
-        mutateUpsertTask({ variables: { ...task, name } })
-    }
+    const [name, setName] = useState(task.name || "")
+    const deleteHandler = () => mutateDeleteTask({ variables: { id: task.id, listId: list.id } })
+    const upsertName = (name: TaskType["name"]) => mutateUpsertTask({ variables: { ...task, name } })
     const debouncedUpsertName = useDebouncedCallback(upsertName, 1000)
     const changeNameHandler = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
         setName(value)
@@ -58,7 +50,6 @@ export default function TaskContainer ({
     }
     const changeDoneHandler = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
         mutateUpsertTask({ variables: { ...task, done: checked } })
-        SetNeedsReorderTasks()
     }
 
     return (
