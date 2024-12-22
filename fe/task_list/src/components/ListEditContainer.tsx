@@ -49,7 +49,7 @@ export default function ListEditContainer ({
                 cache.modify({
                     fields: {
                         lists (existingLists = []) {
-                            return [...existingLists, { __ref: cache.identify(upsertList.list) }]
+                            return [{ __ref: cache.identify(upsertList.list) }, ...existingLists]
                         }
                     }
                 })
