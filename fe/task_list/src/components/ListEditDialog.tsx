@@ -19,6 +19,7 @@ export default function ListEditDialog ({
         <DialogRoot
             role="alertdialog"
             placement="center"
+            size="lg"
         >
             <DialogTrigger asChild>
                 { children }

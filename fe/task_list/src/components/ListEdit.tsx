@@ -21,13 +21,13 @@ export default function ListEdit ({
     createListHandler: () => void
 }) {
     return (
-        <PopoverRoot lazyMount unmountOnExit positioning={ { placement: "left-end" } } >
+        <PopoverRoot lazyMount unmountOnExit positioning={ { placement: "left-end" } }>
             <PopoverTrigger asChild>
                 <Button colorPalette="blue">
                     <span className={ "material-icons" }>edit</span>
                 </Button>
             </PopoverTrigger>
-            <PopoverContent>
+            <PopoverContent zIndex="banner">
                 <PopoverArrow />
                 <PopoverBody>
                     <Tabs.Root lazyMount unmountOnExit defaultValue="tab-1">
@@ -44,7 +44,7 @@ export default function ListEdit ({
                                     size="2xl"
                                 />
                                 <ListEditDialog
-                                    text="リストを削除しますか？"
+                                    text={ `リストを削除しますか？: ${ name }` }
                                     colorPalette="red"
                                     label="削除"
                                     executeHandler={ deleteListHandler }
@@ -66,7 +66,7 @@ export default function ListEdit ({
                                     onChange={ changeNewNameHandler }
                                     placeholder="新規登録" size="2xl" />
                                 <ListEditDialog
-                                    text="リストを追加しますか？"
+                                    text={ `リストを追加しますか？: ${ newName }` }
                                     colorPalette="blue"
                                     label="追加"
                                     executeHandler={ createListHandler }
