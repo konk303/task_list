@@ -4,8 +4,8 @@ import type { List, Task as TaskType } from '../__generated__/graphql';
 import useUpsertTask from '../hooks/useUpsertTask';
 import useDeleteTask from '../hooks/useDeleteTask';
 import Task from './Task';
-import TaskDraggable from './TaskDraggable';
 import { Reference } from '@apollo/client';
+import { SwitchCheckedChangeDetails } from '@chakra-ui/react';
 
 export default function TaskContainer ({
     list,
@@ -49,19 +49,17 @@ export default function TaskContainer ({
         setName(value)
         debouncedUpsertName(value)
     }
-    const changeDoneHandler = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
+    const changeDoneHandler = ({ checked }: SwitchCheckedChangeDetails) => {
         mutateUpsertTask({ variables: { ...task, done: checked } })
     }
 
     return (
-        <TaskDraggable id={ task.id }>
-            <Task
-                task={ task }
-                name={ name }
-                changeNameHandler={ changeNameHandler }
-                changeDoneHandler={ changeDoneHandler }
-                deleteHandler={ deleteHandler }
-            />
-        </TaskDraggable>
+        <Task
+            task={ task }
+            name={ name }
+            changeNameHandler={ changeNameHandler }
+            changeDoneHandler={ changeDoneHandler }
+            deleteHandler={ deleteHandler }
+        />
     )
 }

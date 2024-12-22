@@ -10,7 +10,7 @@ export default function List ({
     tasks: Task[],
 }) {
     return (
-        <ul>
+        <>
             { tasks.map(
                 task => (
                     <TaskContainer
@@ -19,6 +19,6 @@ export default function List ({
                         task={ task }
                     />
                 )) }
-        </ul >
+        </>
     )
 }

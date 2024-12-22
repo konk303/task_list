@@ -15,17 +15,16 @@ export default function Lists ({
   const options = createListCollection({ items: lists.map(({ id, name }) => ({ label: name, value: id })) })
   return (
     <>
-      <Center>
+      <Center p="4">
         <SelectRoot
           size="lg"
-          w="50%"
           collection={ options }
           value={ [list.id] }
           onValueChange={ changeHandler }
         >
           <SelectLabel>List</SelectLabel>
           <SelectTrigger>
-            <SelectValueText color="red.500" fontWeight="bold" />
+            <SelectValueText color="red.500" fontWeight="bold" fontSize="2xl" />
           </SelectTrigger>
           <SelectContent>
             { options.items.map(list => (
