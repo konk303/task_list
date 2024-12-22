@@ -15,6 +15,7 @@ export default function TaskDraggable ({ id, children }: { id: Task["id"], child
     } = useSortable({ id });
 
     const style = {
+        touchAction: "none",
         transform: CSS.Transform.toString(transform),
         transition,
     };
