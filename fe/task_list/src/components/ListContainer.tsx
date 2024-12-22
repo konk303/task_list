@@ -1,5 +1,4 @@
-import List from './List.tsx'
-import type { List as ListType, Task } from '../__generated__/graphql.ts';
+import type { List, Task } from '../__generated__/graphql.ts';
 import { useState } from 'react';
 import { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
@@ -7,8 +6,9 @@ import useList from '../hooks/useList.ts';
 import useReorderTasks from '../hooks/useReorderTasks.ts';
 import TaskSortable from './TaskSortable.tsx';
 import { Reference, useApolloClient } from '@apollo/client';
+import TaskContainer from './TaskContainer.tsx';
 
-export default function ListContainer ({ list }: { list: ListType }) {
+export default function ListContainer ({ list }: { list: List }) {
     const [prevTaskIds, setPrevTaskIds] = useState("")
     const [mutateReorderTasks] = useReorderTasks()
     const client = useApolloClient()
@@ -60,10 +60,14 @@ export default function ListContainer ({ list }: { list: ListType }) {
     const sortableTaskIds = tasks.filter(({ done }) => !Boolean(done)).map(({ id }) => id)
     return (
         <TaskSortable items={ sortableTaskIds } dragEndHandler={ dragEndHandler }>
-            <List
-                list={ list }
-                tasks={ sortedTasksWithNew }
-            />
+            { sortedTasksWithNew.map(
+                task => (
+                    <TaskContainer
+                        key={ task.id }
+                        list={ list }
+                        task={ task }
+                    />
+                )) }
         </TaskSortable>
     )
 }

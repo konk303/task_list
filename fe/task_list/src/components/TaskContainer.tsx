@@ -14,7 +14,24 @@ export default function TaskContainer ({
     list: List,
     task: TaskType,
 }) {
-    const [mutateUpsertTask] = useUpsertTask({
+    const [mutateUpsertTask] = useUpsertTask()
+    const [mutateDeleteTask] = useDeleteTask()
+    const [name, setName] = useState(task.name || "")
+    const deleteHandler = () => mutateDeleteTask({
+        variables: { id: task.id, listId: list.id },
+        update (cache) {
+            cache.modify({
+                id: cache.identify(list),
+                fields: {
+                    tasks (existingTasks = [], { readField }) {
+                        return existingTasks.filter((taskRef: Reference) => readField("id", taskRef) !== task.id)
+                    }
+                }
+            })
+        }
+    })
+    const upsertName = (name: TaskType["name"]) => mutateUpsertTask({
+        variables: { ...task, name },
         update (cache, { data: { upsertTask } }) {
             if (task.id !== "") return
             setName('')
@@ -28,22 +45,6 @@ export default function TaskContainer ({
             })
         }
     })
-    const [mutateDeleteTask] = useDeleteTask({
-        update (cache) {
-            cache.modify({
-                id: cache.identify(list),
-                fields: {
-                    tasks (existingTasks = [], { readField }) {
-                        return existingTasks.filter((taskRef: Reference) => readField("id", taskRef) !== task.id)
-                    }
-                }
-            })
-        }
-    })
-
-    const [name, setName] = useState(task.name || "")
-    const deleteHandler = () => mutateDeleteTask({ variables: { id: task.id, listId: list.id } })
-    const upsertName = (name: TaskType["name"]) => mutateUpsertTask({ variables: { ...task, name } })
     const debouncedUpsertName = useDebouncedCallback(upsertName, 1000)
     const changeNameHandler = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
         setName(value)
