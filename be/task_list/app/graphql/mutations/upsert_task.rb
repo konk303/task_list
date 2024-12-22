@@ -5,7 +5,7 @@ module Mutations
     field :task, Types::TaskType, null: false
     field :errors, [ String ], null: false
 
-    argument :id, ID, required: :nullable
+    argument :id, ID, required: true
     argument :list_id, ID, required: true
     argument :name, String, required: false
     argument :done, Boolean, required: false
