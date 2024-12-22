@@ -1,11 +1,12 @@
-import type { List, Task } from '../__generated__/graphql.ts';
+import type { List as ListType, Task } from '../__generated__/graphql.ts';
+
 import TaskContainer from './TaskContainer.tsx';
 
-export default function Tasks ({
+export default function List ({
     list,
     tasks,
 }: {
-    list: List,
+    list: ListType,
     tasks: Task[],
 }) {
     return (

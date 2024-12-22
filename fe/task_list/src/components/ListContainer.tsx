@@ -1,5 +1,5 @@
-import Tasks from './Tasks.tsx'
-import type { List, Task } from '../__generated__/graphql.ts';
+import List from './List.tsx'
+import type { List as ListType, Task } from '../__generated__/graphql.ts';
 import { createContext, useState } from 'react';
 import { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
@@ -9,7 +9,7 @@ import TaskSortable from './TaskSortable.tsx';
 
 export const SetNeedsReorderTasksContext = createContext(() => { })
 
-export default function TasksContainer ({ list }: { list: List }) {
+export default function ListContainer ({ list }: { list: ListType }) {
     const [needsReorderTasks, setNeedsReorderTasks] = useState(false)
     const { loading, error, data } = useList(list.id)
     const [mutateReorderTasks] = useReorderTasks()
@@ -47,7 +47,7 @@ export default function TasksContainer ({ list }: { list: List }) {
     return (
         <SetNeedsReorderTasksContext.Provider value={ setNeedsReorderTasksHOF }>
             <TaskSortable items={ sortableTaskIds } dragEndHandler={ dragEndHandler }>
-                <Tasks
+                <List
                     list={ list }
                     tasks={ sortedTasksWithNew }
                 />

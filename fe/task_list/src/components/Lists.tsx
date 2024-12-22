@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react';
 import { List } from '../__generated__/graphql';
-import TasksContainer from './TasksContainer';
+import ListContainer from './ListContainer';
 
 export default function Lists ({
   lists,
@@ -16,7 +16,7 @@ export default function Lists ({
       <select value={ list.id } onChange={ changeHandler }>
         { lists.map(({ id, name }) => <option key={ id } value={ id }>{ name }</option>) }
       </select>
-      <TasksContainer list={ list } key={ list.id } />
+      <ListContainer list={ list } key={ list.id } />
     </div>
   );
 }

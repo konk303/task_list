@@ -5,7 +5,7 @@ import useUpsertTask from '../hooks/useUpsertTask';
 import useDeleteTask from '../hooks/useDeleteTask';
 import Task from './Task';
 import TaskDraggable from './TaskDraggable';
-import { SetNeedsReorderTasksContext } from './TasksContainer';
+import { SetNeedsReorderTasksContext } from './ListContainer';
 
 export default function TaskContainer ({
     list,
