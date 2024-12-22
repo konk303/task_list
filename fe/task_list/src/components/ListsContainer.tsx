@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from 'react';
 import Lists from './Lists';
 import useLists from '../hooks/useLists';
 import { List } from '../__generated__/graphql';
+import { SelectValueChangeDetails } from '@chakra-ui/react';
 
 export default function ListsContainer () {
     const { loading, error, data } = useLists()
@@ -12,7 +13,7 @@ export default function ListsContainer () {
 
     const lists: List[] = data.lists
     const list = lists.find(({ id }) => id === listId) || lists[0]
-    const changeHandler = ({ target: { value } }: ChangeEvent<HTMLSelectElement>) => setListId(value)
+    const changeHandler = ({ value }: SelectValueChangeDetails) => setListId(value[0])
 
     return (
         <Lists lists={ lists } list={ list } changeHandler={ changeHandler }></Lists>

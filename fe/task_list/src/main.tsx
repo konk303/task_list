@@ -3,8 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import { ChakraProvider } from '@chakra-ui/react';
-import { system } from '@chakra-ui/react/preset';
+import { Provider } from './components/ui/provider.tsx';
 
 const client = new ApolloClient({
   uri: 'http://127.0.0.1:3000/graphql',
@@ -14,9 +13,9 @@ const client = new ApolloClient({
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ApolloProvider client={ client }>
-      <ChakraProvider value={ system }>
+      <Provider>
         <App />
-      </ChakraProvider>
+      </Provider>
     </ApolloProvider>
-  </StrictMode>,
+  </StrictMode >,
 )

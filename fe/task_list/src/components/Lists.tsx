@@ -1,6 +1,7 @@
-import { ChangeEvent } from 'react';
+import { Center, createListCollection, SelectValueChangeDetails } from '@chakra-ui/react';
 import { List } from '../__generated__/graphql';
 import ListContainer from './ListContainer';
+import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from './ui/select';
 
 export default function Lists ({
   lists,
@@ -9,14 +10,31 @@ export default function Lists ({
 }: {
   lists: List[],
   list: List,
-  changeHandler: (event: ChangeEvent<HTMLSelectElement>) => void
+  changeHandler: (details: SelectValueChangeDetails) => void
 }) {
+  const options = createListCollection({ items: lists.map(({ id, name }) => ({ label: name, value: id })) })
   return (
-    <div>
-      <select value={ list.id } onChange={ changeHandler }>
-        { lists.map(({ id, name }) => <option key={ id } value={ id }>{ name }</option>) }
-      </select>
+    <>
+      <Center>
+        <SelectRoot
+          size="lg"
+          w="50%"
+          collection={ options }
+          value={ [list.id] }
+          onValueChange={ changeHandler }
+        >
+          <SelectLabel>List</SelectLabel>
+          <SelectTrigger>
+            <SelectValueText color="red.500" fontWeight="bold" />
+          </SelectTrigger>
+          <SelectContent>
+            { options.items.map(list => (
+              <SelectItem item={ list } key={ list.value }>{ list.label }</SelectItem>
+            )) }
+          </SelectContent>
+        </SelectRoot>
+      </Center>
       <ListContainer list={ list } key={ list.id } />
-    </div>
+    </>
   );
 }
