@@ -5,6 +5,7 @@ import useUpsertTask from '../hooks/useUpsertTask';
 import useDeleteTask from '../hooks/useDeleteTask';
 import Task from './Task';
 import TaskDraggable from './TaskDraggable';
+import { Reference } from '@apollo/client';
 
 export default function TaskContainer ({
     list,
@@ -33,7 +34,7 @@ export default function TaskContainer ({
                 id: cache.identify(list),
                 fields: {
                     tasks (existingTasks = [], { readField }) {
-                        return existingTasks.filter((taskRef: any) => readField("id", taskRef) !== task.id)
+                        return existingTasks.filter((taskRef: Reference) => readField("id", taskRef) !== task.id)
                     }
                 }
             })
