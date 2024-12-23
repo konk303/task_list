@@ -2,7 +2,7 @@
 Simple Task list APP
 
 ## frontend
-TypeScript: React + Apollo client + Chakra UI (via vite)
+TypeScript: React + Apollo client + Chakra UI + React Router (via vite)
 ## backend
 Ruby: rails + graphql-ruby
 
