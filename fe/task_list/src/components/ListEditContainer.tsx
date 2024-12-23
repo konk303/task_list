@@ -1,18 +1,17 @@
 import { ChangeEvent, useState } from 'react';
 import { List } from '../__generated__/graphql.ts';
 import ListEdit from './ListEdit.tsx';
-import useUpsertList from '../hooks/useUpsertList.ts';
+import useUpsertList, { modifyCacheMutateUpsertList } from '../hooks/useUpsertList.ts';
 import { useDebouncedCallback } from 'use-debounce';
-import useDeleteList from '../hooks/useDeleteList.ts';
+import useDeleteList, { modifyCacheMutateDeleteList } from '../hooks/useDeleteList.ts';
 import { SelectValueChangeDetails } from '@chakra-ui/react';
-import { Reference } from '@apollo/client';
 
 export default function ListEditContainer ({
     list,
-    changeHandler
+    changeSelectedListHandler
 }: {
     list: List,
-    changeHandler: (details: SelectValueChangeDetails) => void
+    changeSelectedListHandler: (details: SelectValueChangeDetails) => void
 }) {
     const [name, setName] = useState(list.name)
     const [newName, setNewName] = useState("")
@@ -28,34 +27,22 @@ export default function ListEditContainer ({
     const deleteListHandler = () => {
         mutateDeleteList({
             variables: { id: list.id },
-            update (cache) {
-                cache.modify({
-                    fields: {
-                        lists (existingLists = [], { readField }) {
-                            return existingLists.filter((listRef: Reference) => readField("id", listRef) !== list.id)
-                        }
-                    }
-                })
+            update (cache, { data: { deleteList: { list: oldList } } }) {
+                modifyCacheMutateDeleteList(cache, oldList)
             }
         })
-        changeHandler({ items: [], value: ["foo"] })
+        changeSelectedListHandler({ items: [], value: [""] })
     }
     const changeNewNameHandler = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => setNewName(value)
     const createListHandler = async () => {
         const result = await mutateUpsertList({
             variables: { id: "", name: newName },
-            update (cache, { data: { upsertList } }) {
+            update (cache, { data: { upsertList: { list: newList } } }) {
                 setNewName('')
-                cache.modify({
-                    fields: {
-                        lists (existingLists = []) {
-                            return [{ __ref: cache.identify(upsertList.list) }, ...existingLists]
-                        }
-                    }
-                })
+                modifyCacheMutateUpsertList(cache, newList)
             }
         })
-        changeHandler({ items: [], value: [result.data.upsertList.list.id] })
+        changeSelectedListHandler({ items: [], value: [result.data.upsertList.list.id] })
     }
 
     return (

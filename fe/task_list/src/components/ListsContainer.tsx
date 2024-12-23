@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import Lists from './Lists';
 import useLists from '../hooks/useLists';
 import { List } from '../__generated__/graphql';
@@ -13,9 +13,9 @@ export default function ListsContainer () {
 
     const lists: List[] = data.lists
     const list = lists.find(({ id }) => id === listId) || lists[0]
-    const changeHandler = ({ value }: SelectValueChangeDetails) => setListId(value[0])
+    const changeSelectedListHandler = ({ value }: SelectValueChangeDetails) => setListId(value[0])
 
     return (
-        <Lists lists={ lists } list={ list } changeHandler={ changeHandler }></Lists>
+        <Lists lists={ lists } list={ list } changeSelectedListHandler={ changeSelectedListHandler }></Lists>
     );
 }

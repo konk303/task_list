@@ -7,11 +7,11 @@ import ListEditContainer from './ListEditContainer';
 export default function Lists ({
   lists,
   list,
-  changeHandler
+  changeSelectedListHandler
 }: {
   lists: List[],
   list: List,
-  changeHandler: (details: SelectValueChangeDetails) => void
+  changeSelectedListHandler: (details: SelectValueChangeDetails) => void
 }) {
   const options = createListCollection({ items: lists.map(({ id, name }) => ({ label: name, value: id })) })
   return (
@@ -21,7 +21,7 @@ export default function Lists ({
           size="lg"
           collection={ options }
           value={ [list.id] }
-          onValueChange={ changeHandler }
+          onValueChange={ changeSelectedListHandler }
         >
           <SelectTrigger>
             <SelectValueText color="red.500" fontWeight="bold" fontSize="2xl" />
@@ -32,7 +32,7 @@ export default function Lists ({
             )) }
           </SelectContent>
         </SelectRoot>
-        <ListEditContainer list={ list } key={ list.id } changeHandler={ changeHandler } />
+        <ListEditContainer list={ list } key={ list.id } changeSelectedListHandler={ changeSelectedListHandler } />
       </Flex>
       <ListContainer list={ list } key={ list.id } />
     </>

@@ -33,7 +33,7 @@ export default function ListEdit ({
                     <Tabs.Root lazyMount unmountOnExit defaultValue="tab-1">
                         <Tabs.List>
                             <Tabs.Trigger value="tab-1">Edit</Tabs.Trigger>
-                            <Tabs.Trigger value="tab-2">Create New List</Tabs.Trigger>
+                            <Tabs.Trigger value="tab-2">... or Create New List</Tabs.Trigger>
                         </Tabs.List>
                         <Tabs.Content value="tab-1">
                             <PopoverTitle fontWeight="medium">Title</PopoverTitle>

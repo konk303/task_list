@@ -1,10 +1,9 @@
 import { ChangeEvent, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import type { List, Task as TaskType } from '../__generated__/graphql';
-import useUpsertTask from '../hooks/useUpsertTask';
-import useDeleteTask from '../hooks/useDeleteTask';
+import useUpsertTask, { modifyCacheMutateUpsertTask } from '../hooks/useUpsertTask';
+import useDeleteTask, { modifyCacheMutateDeleteTask } from '../hooks/useDeleteTask';
 import Task from './Task';
-import { Reference } from '@apollo/client';
 import { SwitchCheckedChangeDetails } from '@chakra-ui/react';
 
 export default function TaskContainer ({
@@ -19,30 +18,16 @@ export default function TaskContainer ({
     const [name, setName] = useState(task.name || "")
     const deleteHandler = () => mutateDeleteTask({
         variables: { id: task.id, listId: list.id },
-        update (cache) {
-            cache.modify({
-                id: cache.identify(list),
-                fields: {
-                    tasks (existingTasks = [], { readField }) {
-                        return existingTasks.filter((taskRef: Reference) => readField("id", taskRef) !== task.id)
-                    }
-                }
-            })
+        update (cache, { data: { deleteTask: { task: oldTask } } }) {
+            modifyCacheMutateDeleteTask(cache, list, oldTask)
         }
     })
     const upsertName = (name: TaskType["name"]) => mutateUpsertTask({
         variables: { ...task, name },
-        update (cache, { data: { upsertTask } }) {
+        update (cache, { data: { upsertTask: { task: newTask } } }) {
             if (task.id !== "") return
             setName('')
-            cache.modify({
-                id: cache.identify(list),
-                fields: {
-                    tasks (existingTasks = []) {
-                        return [...existingTasks, { __ref: cache.identify(upsertTask.task) }]
-                    }
-                }
-            })
+            modifyCacheMutateUpsertTask(cache, list, newTask)
         }
     })
     const debouncedUpsertName = useDebouncedCallback(upsertName, 1000)
