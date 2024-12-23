@@ -5,43 +5,42 @@ import { List } from '../__generated__/graphql.ts';
 import { ChangeEvent } from 'react';
 import ListEditDialog from './ListEditDialog.tsx';
 
-export default function ListEdit ({
-    name,
-    changeNameHandler,
-    deleteListHandler,
+export default function ListCreate ({
+    newName,
+    changeNewNameHandler,
+    createListHandler
 }: {
-    name: List["name"],
-    changeNameHandler: (event: ChangeEvent<HTMLInputElement>) => void,
-    deleteListHandler: () => void,
+    newName: List["name"],
+    changeNewNameHandler: (event: ChangeEvent<HTMLInputElement>) => void,
+    createListHandler: () => void
 }) {
     return (
         <PopoverRoot lazyMount unmountOnExit positioning={ { placement: "left-end" } }>
             <PopoverTrigger asChild>
-                <Button colorPalette="blue">
-                    <span className={ "material-icons" }>edit</span>
+                <Button colorPalette="blue" >
+                    <span className={ "material-icons" }>add</span>
                 </Button>
             </PopoverTrigger>
             <PopoverContent zIndex="banner">
                 <PopoverArrow />
                 <PopoverBody>
-                    <PopoverTitle fontWeight="medium">Edit Title</PopoverTitle>
-                    <Flex gap="5" align="baseline">
+                    <PopoverTitle fontWeight="medium">New List</PopoverTitle>
+                    <Flex gap="1" align="baseline">
                         <Input
-                            value={ name || "" }
-                            onChange={ changeNameHandler }
-                            size="2xl"
-                        />
+                            value={ newName || "" }
+                            onChange={ changeNewNameHandler }
+                            placeholder="新規登録" size="2xl" />
                         <ListEditDialog
-                            text={ `リストを削除しますか？: ${ name }` }
-                            colorPalette="red"
-                            label="削除"
-                            executeHandler={ deleteListHandler }
+                            text={ `リストを追加しますか？: ${ newName }` }
+                            colorPalette="blue"
+                            label="追加"
+                            executeHandler={ createListHandler }
                         >
                             <Button
                                 size="sm"
-                                colorPalette="red"
+                                colorPalette="blue"
                             >
-                                <span className={ "material-icons" }>delete</span>
+                                <span className={ "material-icons" }>add</span>
                             </Button>
                         </ListEditDialog>
                     </Flex>

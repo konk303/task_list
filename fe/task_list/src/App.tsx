@@ -1,6 +1,7 @@
 import { Center, Container, Heading, Highlight, Separator } from '@chakra-ui/react';
 import './App.css'
 import ListsContainer from './components/ListsContainer.tsx';
+import { Outlet } from 'react-router';
 
 export default function App () {
   return (
@@ -13,7 +14,7 @@ export default function App () {
         </Heading>
       </Center>
       <Separator />
-      <ListsContainer />
-    </Container >
+      <Outlet />
+    </Container>
   );
 }

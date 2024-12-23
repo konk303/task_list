@@ -1,4 +1,4 @@
-import type { List, Task } from '../__generated__/graphql.ts';
+import type { Task } from '../__generated__/graphql.ts';
 import { useState } from 'react';
 import { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
@@ -7,17 +7,20 @@ import useReorderTasks from '../hooks/useReorderTasks.ts';
 import TaskSortable from './TaskSortable.tsx';
 import { Reference, useApolloClient } from '@apollo/client';
 import TaskContainer from './TaskContainer.tsx';
+import { useParams } from 'react-router';
 
-export default function ListContainer ({ list }: { list: List }) {
+export default function ListContainer () {
+    const { listId } = useParams()
     const [prevTaskIds, setPrevTaskIds] = useState("")
     const [mutateReorderTasks] = useReorderTasks()
     const client = useApolloClient()
 
-    const { loading, error, data } = useList(list.id)
+    const { loading, error, data } = useList(listId || "")
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error : { error.message }</p>;
 
-    const tasks: Task[] = data?.list?.tasks || []
+    const list = data.list
+    const tasks: Task[] = data.list.tasks
     const sortedTasks: Task[] = tasks.toSorted((a: Task, b: Task) => Number(a.done) - Number(b.done))
     const sortedTasksWithNew = sortedTasks.toSpliced(
         sortedTasks.findLastIndex(({ done }) => !Boolean(done)) + 1,

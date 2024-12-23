@@ -1,20 +1,18 @@
 import { ChangeEvent, useState } from 'react';
 import { List } from '../__generated__/graphql.ts';
 import ListEdit from './ListEdit.tsx';
-import useUpsertList, { modifyCacheMutateUpsertList } from '../hooks/useUpsertList.ts';
+import useUpsertList from '../hooks/useUpsertList.ts';
 import { useDebouncedCallback } from 'use-debounce';
 import useDeleteList, { modifyCacheMutateDeleteList } from '../hooks/useDeleteList.ts';
-import { SelectValueChangeDetails } from '@chakra-ui/react';
+import { useNavigate } from 'react-router';
 
 export default function ListEditContainer ({
     list,
-    changeSelectedListHandler
 }: {
     list: List,
-    changeSelectedListHandler: (details: SelectValueChangeDetails) => void
 }) {
-    const [name, setName] = useState(list.name)
-    const [newName, setNewName] = useState("")
+    const navigate = useNavigate()
+    const [name, setName] = useState(list?.name || "")
     const [mutateUpsertList] = useUpsertList()
     const [mutateDeleteList] = useDeleteList()
 
@@ -31,26 +29,14 @@ export default function ListEditContainer ({
                 modifyCacheMutateDeleteList(cache, oldList)
             }
         })
-        changeSelectedListHandler({ items: [], value: [""] })
-    }
-    const changeNewNameHandler = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => setNewName(value)
-    const createListHandler = async () => {
-        const result = await mutateUpsertList({
-            variables: { id: "", name: newName },
-            update (cache, { data: { upsertList: { list: newList } } }) {
-                setNewName('')
-                modifyCacheMutateUpsertList(cache, newList)
-            }
-        })
-        changeSelectedListHandler({ items: [], value: [result.data.upsertList.list.id] })
+        navigate(`/lists`)
     }
 
     return (
-        <ListEdit name={ name }
+        <ListEdit
+            name={ name }
             changeNameHandler={ changeNameHandler }
             deleteListHandler={ deleteListHandler }
-            newName={ newName }
-            changeNewNameHandler={ changeNewNameHandler }
-            createListHandler={ createListHandler } />
+        />
     )
 }

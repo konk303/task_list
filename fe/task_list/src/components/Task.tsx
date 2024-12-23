@@ -48,7 +48,7 @@ export default function Task ({
             >
                 <span className={ "material-icons" }>delete</span>
             </Button>
-            <Float>
+            <Float placement="top-start">
                 <Text textStyle="xs" color="fg.subtle">(id: { task.id }, order: { task.order })</Text>
             </Float>
         </TaskDraggable>

@@ -35,10 +35,12 @@ export default function ListEditDialog ({
                     <DialogActionTrigger asChild>
                         <Button variant="outline">キャンセル</Button>
                     </DialogActionTrigger>
-                    <Button
-                        colorPalette={ colorPalette }
-                        onClick={ executeHandler }
-                    >{ label }</Button>
+                    <DialogActionTrigger asChild>
+                        <Button
+                            colorPalette={ colorPalette }
+                            onClick={ executeHandler }
+                        >{ label }</Button>
+                    </DialogActionTrigger>
                 </DialogFooter>
                 <DialogCloseTrigger />
             </DialogContent>
