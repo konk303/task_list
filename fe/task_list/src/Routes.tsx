@@ -1,8 +1,7 @@
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import App from "./App";
 import ListContainer from "./components/ListContainer";
 import ListsContainer from "./components/ListsContainer";
-import Home from "./components/Home";
 import ListsHome from "./components/ListsHome";
 
 export default function RouteSets () {
@@ -10,7 +9,7 @@ export default function RouteSets () {
         <BrowserRouter>
             <Routes>
                 <Route element={ <App /> }>
-                    <Route index element={ <Home /> } />
+                    <Route index element={ <Navigate replace to="/lists" /> } />
                     <Route path="lists" element={ <ListsContainer /> }>
                         <Route index element={ <ListsHome /> } />
                         <Route path=":listId" element={ <ListContainer /> } />
